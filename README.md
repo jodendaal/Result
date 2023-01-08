@@ -1,5 +1,7 @@
 # Result
 
+Simple library to assist with handling operation results, success, validation and exceptions.
+
 # Example Usage
  
 
