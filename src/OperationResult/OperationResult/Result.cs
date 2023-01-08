@@ -1,4 +1,8 @@
-﻿namespace OperationResult
+﻿using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
+
+namespace OperationResult
 {
     public class Result<TResult>
     {
@@ -7,20 +11,59 @@
             Value = result;
         }
 
-        private Result(Exception exception, string? errorMessaage = null)
+        private Result(Exception exception)
         {
-            Exception = exception;
-            ErrorMessage = errorMessaage ?? exception.Message;
+            Error = new Error(exception);
+        }
+
+        private Result(Exception exception, string code)
+        {
+            Error = new Error(exception, code);
+        }
+
+        private Result(Exception exception,string code, string errorMessaage)
+        {
+            Error = new Error(exception, code, errorMessaage);
+        }
+        private Result(Error error)
+        {
+            Error = error;
+        }
+
+        private Result(string code, string errorMessage,string stackTrace = null)
+        {
+            Error = new Error(code, errorMessage, stackTrace);
         }
 
         private Result(Dictionary<string, string[]> validationErrors)
         {
-            ValidationErrors = validationErrors;
+            ValidationErrors = new ReadOnlyDictionary<string, string[]>(validationErrors);
         }
 
         public static Result<TResult> Failure(Exception ex)
         {
             return new Result<TResult>(ex);
+        }
+
+        public static Result<TResult> Failure(Exception ex,string code)
+        {
+            return new Result<TResult>(ex,code);
+        }
+
+        public static Result<TResult> Failure(Error error)
+        {
+            return new Result<TResult>(error);
+        }
+
+        public static Result<TResult> Failure(Exception ex,string code, string message)
+        {
+            return new Result<TResult>(ex, code,message);
+        }
+
+        public static Result<TResult> Failure( string code, string message,[CallerMemberName] string callerMemberName = null, [CallerFilePath] string callerFilePath = null, [CallerLineNumber] int callerLineNumberAttribute = 0)
+        {
+            var stackTrace = $"at {callerMemberName} in {callerFilePath}:line {callerLineNumberAttribute}";
+            return new Result<TResult>(code, message, stackTrace);
         }
 
         public static Result<TResult> Validation(Dictionary<string, string[]> validationErrors)
@@ -30,35 +73,31 @@
 
         public static Result<TResult> Validation(string field, string[] fieldValidationErrors)
         {
-            var validationError = new Dictionary<string, string[]>();
-            validationError.Add(field, fieldValidationErrors);
+            var validationError = new Dictionary<string, string[]>
+            {
+                { field, fieldValidationErrors }
+            };
             return new Result<TResult>(validationError);
         }
 
         public static Result<TResult> Validation(string field, string validationError)
         {
-            var validationErrors = new Dictionary<string, string[]>();
-            validationErrors.Add(field, new string[] { validationError });
+            var validationErrors = new Dictionary<string, string[]>
+            {
+                { field, new string[] { validationError } }
+            };
             return new Result<TResult>(validationErrors);
         }
 
 
-        public Dictionary<string, string[]> ValidationErrors { get; set; } = new();
+        public ReadOnlyDictionary<string, string[]>? ValidationErrors { get; init; } 
 
-        public TResult? Value { get; set; }
-        public string ErrorMessage { get; set; }
-        public Exception Exception { get; set; }
-        public bool IsSuccess => Exception == null && ValidationErrors.Count() == 0;
+        public TResult? Value { get; init; }
+        public Error? Error { get; init; }
+        public bool IsSuccess => Error == null && ValidationErrors == null;
 
-        public ErrorType ErrorType => Exception != null ? ErrorType.Exception : (ValidationErrors.Count() > 0 ? ErrorType.Validation : ErrorType.None);
+        public FailureType ErrorType => Error != null ? FailureType.Error : (ValidationErrors != null ? FailureType.Validation : FailureType.None);
 
         public static implicit operator Result<TResult>(TResult? result) => new Result<TResult>(result);
-    }
-
-    public enum ErrorType
-    {
-        None,
-        Exception,
-        Validation
     }
 }

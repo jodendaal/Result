@@ -1,6 +1,6 @@
 namespace OperationResult.Tests
 {
-    public class OperationResultTests
+    public class ResultTests
     {
         [SetUp]
         public void Setup()
@@ -39,7 +39,7 @@ namespace OperationResult.Tests
             var testService = new TestService();
             var result = testService.GetData();
 
-            Assert.True(result.ErrorType == ErrorType.None);
+            Assert.True(result.ErrorType == FailureType.None);
         }
 
         [Test]
@@ -48,7 +48,18 @@ namespace OperationResult.Tests
             var testService = new TestService();
             var result = testService.GetDataWithException();
 
-            Assert.True(result.ErrorType == ErrorType.Exception);
+            Assert.True(result.ErrorType == FailureType.Error);
+            Assert.True(result.Error?.Type == ErrorType.Exception);
+        }
+
+        [Test]
+        public void ErrorType_IsErrorWhenErrorIsSet()
+        {
+            var testService = new TestService();
+            var result = testService.GetDataWithError();
+
+            Assert.True(result.ErrorType == FailureType.Error);
+            Assert.True(result.Error?.Type == ErrorType.Error);
         }
 
         [Test]
@@ -57,8 +68,9 @@ namespace OperationResult.Tests
             var testService = new TestService();
             var result = testService.GetDataWithValidationErrorDictionary();
 
-            Assert.True(result.ErrorType == ErrorType.Validation);
+            Assert.True(result.ErrorType == FailureType.Validation);
         }
+
 
         [Test]
         public void Exception_IsSetAndSucessIsFalse_WhenError()
@@ -69,7 +81,8 @@ namespace OperationResult.Tests
             Assert.NotNull(result);
             Assert.False(result.IsSuccess);
             Assert.IsNull(result.Value);
-            Assert.NotNull(result.Exception);
+            Assert.That(result.Error?.Type, Is.EqualTo(ErrorType.Exception));
+            Assert.NotNull(result.Error?.Exception);
         }
 
         [Test]
@@ -78,7 +91,7 @@ namespace OperationResult.Tests
             var testService = new TestService();
             var result = testService.GetDataWithValidationErrorDictionary();
 
-            Assert.True(result.ErrorType == ErrorType.Validation);
+            Assert.True(result.ErrorType == FailureType.Validation);
             Assert.That(result.ValidationErrors.Count(), Is.EqualTo(1));
         }
 
@@ -88,7 +101,7 @@ namespace OperationResult.Tests
             var testService = new TestService();
             var result = testService.GetDataWithValidationErrorSingleFieldArrayOfMesssges();
 
-            Assert.True(result.ErrorType == ErrorType.Validation);
+            Assert.True(result.ErrorType == FailureType.Validation);
             Assert.That(result.ValidationErrors.Count(), Is.EqualTo(1));
             Assert.That(result.ValidationErrors["Id"].Count(), Is.EqualTo(2));
         }
@@ -99,8 +112,20 @@ namespace OperationResult.Tests
             var testService = new TestService();
             var result = testService.GetDataWithValidationErrorSingleFieldAndSingleMessage();
 
-            Assert.True(result.ErrorType == ErrorType.Validation);
+            Assert.True(result.ErrorType == FailureType.Validation);
             Assert.That(result.ValidationErrors.Count(), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void ErrorStackTrace_IsSetWithError()
+        {
+            var testService = new TestService();
+            var result = testService.GetDataWithError();
+
+            Assert.True(result.ErrorType == FailureType.Error);
+            Assert.True(result.Error.Type == ErrorType.Error);
+
+           //Assert.That(result.ValidationErrors.Count(), Is.EqualTo(1));
         }
     }
 
@@ -113,7 +138,20 @@ namespace OperationResult.Tests
 
         public Result<TestResult> GetDataWithException()
         {
-            return Result<TestResult>.Failure(new Exception("An error occured"));
+            try
+            {
+                throw new Exception("An error occured");
+            }
+            catch(Exception ex)
+            {
+                return Result<TestResult>.Failure(ex);
+            }
+            
+        }
+
+        public Result<TestResult> GetDataWithError()
+        {
+            return Result<TestResult>.Failure("123","Test Error");
         }
 
         public Result<TestResult> GetDataWithValidationErrorDictionary()
