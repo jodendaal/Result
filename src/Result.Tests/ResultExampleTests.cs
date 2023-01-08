@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace OperationResult.Tests
+namespace Result.Tests
 {
     public class ResultExampleTests
     {

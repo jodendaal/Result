@@ -1,4 +1,4 @@
-namespace OperationResult.Tests
+namespace Result.Tests
 {
     public class ResultTests
     {

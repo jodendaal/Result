@@ -1,8 +1,7 @@
 ﻿using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
-namespace OperationResult
+namespace Result
 {
     public class Result<TResult>
     {
