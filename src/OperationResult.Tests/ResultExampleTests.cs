@@ -70,6 +70,25 @@ namespace OperationResult.Tests
         {
             return Result<TestResponseObject>.Failure("MyBusinessError","You cannot do this");
         }
+
+        public Result<TestResponseObject> RealExample(int number)
+        {
+            try
+            {
+                if(number > 0)
+                {
+                    return new TestResponseObject("1");
+                }
+                else
+                {
+                    return Result<TestResponseObject>.Validation("number", "must be greater than 0");
+                }
+            }
+            catch(Exception ex)
+            {
+                return Result<TestResponseObject>.Failure(ex);
+            }
+        }
     }
    
        

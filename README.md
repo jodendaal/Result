@@ -5,6 +5,25 @@
 ```csharp
 public class ExampleUsage
 {
+    public Result<TestResponseObject> RealExample(int number)
+    {
+        try
+        {
+            if(number > 0)
+            {
+                return new TestResponseObject("1");
+            }
+            else
+            {
+                return Result<TestResponseObject>.Validation("number", "must be greater than 0");
+            }
+        }
+        catch(Exception ex)
+        {
+            return Result<TestResponseObject>.Failure(ex);
+        }
+    }
+
     public Result<TestResponseObject> Success()
     {
         var result = new TestResponseObject("1");
@@ -37,6 +56,7 @@ public class ExampleUsage
         return Result<TestResponseObject>.Failure("MyBusinessError","You cannot do this");
         // {"ValidationErrors":null,"Value":null,"Error":{"StackTrace":"at ErrorResult in OperationResultExampleTests.cs:line 71","Exception":null,"Code":"MyBusinessError","Message":"You cannot do this","Type":0},"IsSuccess":false,"ErrorType":1}
     }
+    
 }
 
 public class TestResponseObject
