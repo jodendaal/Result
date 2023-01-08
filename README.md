@@ -3,16 +3,6 @@
 # Example Usage
  
 
-
-## Common usage
-```csharp
-public Result<TestResponseObject> ErrorResult()
-{
-    return Result<TestResponseObject>.Failure("MyBusinessError","You cannot do this");
-    // {"ValidationErrors":null,"Value":null,"Error":{"StackTrace":"at ErrorResult in OperationResultExampleTests.cs:line 71","Exception":null,"Code":"MyBusinessError","Message":"You cannot do this","Type":0},"IsSuccess":false,"ErrorType":1}
-}
-```
-
 ```csharp
 
 public class ExampleUsage
