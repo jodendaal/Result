@@ -1,4 +1,4 @@
-# OperationResult
+# Result
 
 # Example Usage
  
