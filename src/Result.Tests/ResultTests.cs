@@ -22,6 +22,16 @@ namespace Result.Tests
         }
 
         [Test]
+        public void Value_IsSet_WithImplicitOperatorInitialisationAndReturnWithImplictConversion()
+        {
+            var testService = new TestService();
+            var result = testService.InitialiseAsReturnType_WithImplicitOperatorAndReturnWithImplict();
+
+            Assert.NotNull(result);
+            Assert.That(result.Id, Is.EqualTo("1"));
+        }
+
+        [Test]
         public void Result_IsSetAndSucessIsTrue_WithImplicitOperator()
         {
             var testService = new TestService();
@@ -175,6 +185,12 @@ namespace Result.Tests
         public Result<TestResult> InitialiseAsReturnType_WithImplicitOperator()
         {
             Result<TestResult> test = new TestResult() { Id="1"};
+            return test;
+        }
+
+        public TestResult InitialiseAsReturnType_WithImplicitOperatorAndReturnWithImplict()
+        {
+            Result<TestResult> test = new TestResult() { Id = "1" };
             return test;
         }
 

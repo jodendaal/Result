@@ -98,5 +98,6 @@ namespace Result
         public FailureType ErrorType => Error != null ? FailureType.Error : (ValidationErrors != null ? FailureType.Validation : FailureType.None);
 
         public static implicit operator Result<TResult>(TResult? result) => new Result<TResult>(result);
+        public static implicit operator TResult(Result<TResult> result) => result;
     }
 }
