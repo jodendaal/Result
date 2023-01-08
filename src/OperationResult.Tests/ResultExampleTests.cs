@@ -71,7 +71,7 @@ namespace OperationResult.Tests
             return Result<TestResponseObject>.Failure("MyBusinessError","You cannot do this");
         }
 
-        public Result<TestResponseObject> RealExample(int number)
+        public Result<TestResponseObject> RealResponse(int number)
         {
             try
             {
@@ -87,6 +87,27 @@ namespace OperationResult.Tests
             catch(Exception ex)
             {
                 return Result<TestResponseObject>.Failure(ex);
+            }
+        }
+
+        public Result<TestResponseObject> RealUsage(int number)
+        {
+            var result = RealExample(1);
+
+            if(result.IsSuccess)
+            {
+                return OK();
+            }
+            else if(result.ErrorType == FailureType.Validation)
+            {
+                //Show validation
+                return Problem(result.ValidationErrors);
+            }
+            else
+            {
+                //Log Error
+                //_logger.log(result.Error)
+                return InternalServerError();
             }
         }
     }

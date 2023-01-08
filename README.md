@@ -2,10 +2,43 @@
 
 # Example Usage
  
+
+
+## Common usage
 ```csharp
+public Result<TestResponseObject> ErrorResult()
+{
+    return Result<TestResponseObject>.Failure("MyBusinessError","You cannot do this");
+    // {"ValidationErrors":null,"Value":null,"Error":{"StackTrace":"at ErrorResult in OperationResultExampleTests.cs:line 71","Exception":null,"Code":"MyBusinessError","Message":"You cannot do this","Type":0},"IsSuccess":false,"ErrorType":1}
+}
+```
+
+```csharp
+
 public class ExampleUsage
 {
-    public Result<TestResponseObject> RealExample(int number)
+    public Result<TestResponseObject> RealUsage(int number)
+    {
+        var result = RealExample(1);
+
+        if(result.IsSuccess)
+        {
+            return OK();
+        }
+        else if(result.ErrorType == FailureType.Validation)
+        {
+            //Show validation
+            return Problem(result.ValidationErrors);
+        }
+        else
+        {
+            //Log Error
+            //_logger.log(result.Error)
+            return InternalServerError();
+        }
+    }
+
+    public Result<TestResponseObject> RealResponse(int number)
     {
         try
         {
