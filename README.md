@@ -9,7 +9,7 @@ public class ExampleUsage
 {
     public Result<TestResponseObject> RealUsage(int number)
     {
-        var result = RealExample(1);
+        var result = RealResponse(1);
 
         if(result.IsSuccess)
         {

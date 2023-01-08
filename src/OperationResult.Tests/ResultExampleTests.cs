@@ -90,26 +90,26 @@ namespace OperationResult.Tests
             }
         }
 
-        public Result<TestResponseObject> RealUsage(int number)
-        {
-            var result = RealExample(1);
+        //public Result<TestResponseObject> RealUsage(int number)
+        //{
+        //    var result = RealResponse(1);
 
-            if(result.IsSuccess)
-            {
-                return OK();
-            }
-            else if(result.ErrorType == FailureType.Validation)
-            {
-                //Show validation
-                return Problem(result.ValidationErrors);
-            }
-            else
-            {
-                //Log Error
-                //_logger.log(result.Error)
-                return InternalServerError();
-            }
-        }
+        //    if(result.IsSuccess)
+        //    {
+        //       // return OK();
+        //    }
+        //    else if(result.ErrorType == FailureType.Validation)
+        //    {
+        //        //Show validation
+        //       // return Problem(result.ValidationErrors);
+        //    }
+        //    else
+        //    {
+        //        //Log Error
+        //        //_logger.log(result.Error)
+        //      //  return InternalServerError();
+        //    }
+        //}
     }
    
        
