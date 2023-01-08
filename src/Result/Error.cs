@@ -1,4 +1,4 @@
-﻿namespace OperationResult
+﻿namespace Result
 {
     public class Error
     {
