@@ -1,3 +1,5 @@
+using System.Collections.ObjectModel;
+
 namespace Result.Tests
 {
     public class ResultTests
@@ -137,6 +139,52 @@ namespace Result.Tests
 
            //Assert.That(result.ValidationErrors.Count(), Is.EqualTo(1));
         }
+
+
+        [Test]
+        public void Match_Error()
+        {
+            var testService = new TestService();
+            var result = testService.GetDataWithError();
+
+            var matchResult = result.Match<object>(
+                (success) => success,
+                (error) => error,
+                (validation) => validation
+                );
+
+            Assert.True(matchResult.GetType() == typeof(Error));
+        }
+
+        [Test]
+        public void Match_Validation()
+        {
+            var testService = new TestService();
+            var result = testService.GetDataWithValidationErrorSingleFieldArrayOfMesssges();
+
+            var matchResult = result.Match<object>(
+                (success) => success,
+                (error) => error,
+                (validation) => validation
+                );
+
+            Assert.True(matchResult.GetType() == typeof(ReadOnlyDictionary<string, string[]>));
+        }
+
+        [Test]
+        public void Match_Success()
+        {
+            var testService = new TestService();
+            var result = testService.GetData();
+
+            var matchResult = result.Match<object>(
+                (success) => success,
+                (error) => error,
+                (validation) => validation
+                );
+
+            Assert.True(matchResult.GetType() == typeof(TestResult));
+        }
     }
 
     public class TestService
@@ -193,6 +241,8 @@ namespace Result.Tests
             Result<TestResult> test = new TestResult() { Id = "1" };
             return test;
         }
+
+        
 
     }
     public class TestResult
