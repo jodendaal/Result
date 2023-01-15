@@ -1,7 +1,17 @@
+[![Build](https://github.com/jodendaal/Result/actions/workflows/main.yml/badge.svg)](https://github.com/jodendaal/Result/actions/workflows/main.yml) [![NuGet Badge](https://buildstats.info/nuget/Result.Match)](https://www.nuget.org/packages/Result.Match)
+
 # Result
 
 Simple library to assist with handling operation results, success, validation and exceptions.
 Also includes a match method for easier handling of response.
+
+# Getting started
+
+Install package [Nuget package](https://www.nuget.org/packages/Result.Match)
+
+```powershell
+Install-Package Result.Match
+```
 
 # Example Usage
  
