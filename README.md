@@ -1,6 +1,7 @@
 # Result
 
 Simple library to assist with handling operation results, success, validation and exceptions.
+Also includes a match method for easier handling of response.
 
 # Example Usage
  
