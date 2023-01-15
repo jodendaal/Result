@@ -88,6 +88,11 @@ namespace Result
             return new Result<TResult>(validationErrors);
         }
 
+        public T Match<T>(Func<TResult?, T> success, Func<Error?, T> error, Func<ReadOnlyDictionary<string, string[]>?, T> validation)
+        {
+            return this.IsSuccess ? success(this.Value) : (Error != null ? error(this.Error) : validation(this.ValidationErrors));
+        }
+
 
         public ReadOnlyDictionary<string, string[]>? ValidationErrors { get; init; } 
 
@@ -98,5 +103,6 @@ namespace Result
         public FailureType ErrorType => Error != null ? FailureType.Error : (ValidationErrors != null ? FailureType.Validation : FailureType.None);
 
         public static implicit operator Result<TResult>(TResult? result) => new Result<TResult>(result);
+        public static implicit operator TResult(Result<TResult> result) => result;
     }
 }
