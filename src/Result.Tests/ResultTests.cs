@@ -23,15 +23,15 @@ namespace Result.Tests
             Assert.That(result.Value.Id, Is.EqualTo("1"));
         }
 
-        //[Test]
-        //public void Value_IsSet_WithImplicitOperatorInitialisationAndReturnWithImplictConversion()
-        //{
-        //    var testService = new TestService();
-        //    var result = testService.InitialiseAsReturnType_WithImplicitOperatorAndReturnWithImplict();
+        [Test]
+        public void Value_IsSet_WithImplicitOperatorInitialisationAndReturnWithImplictConversion()
+        {
+            var testService = new TestService();
+            TestResult result = testService.InitialiseAsReturnType_WithImplicitOperatorAndReturnWithImplict();
 
-        //    Assert.NotNull(result);
-        //    Assert.That(result.Id, Is.EqualTo("1"));
-        //}
+            Assert.NotNull(result);
+            Assert.That(result.Id, Is.EqualTo("1"));
+        }
 
         [Test]
         public void Result_IsSetAndSucessIsTrue_WithImplicitOperator()
