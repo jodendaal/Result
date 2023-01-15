@@ -14,7 +14,15 @@ Install-Package Result.Match
 ```
 
 # Example Usage
- 
+
+## Match
+```csharp
+return result.Match<IActionResult>(
+                (success) => OkObjectResult(success),
+                (error) => BadRequest(),
+                (validation) => ValidationProblemDetails(validation)
+                );
+```
 
 ```csharp
 
