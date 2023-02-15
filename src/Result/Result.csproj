@@ -17,6 +17,7 @@
     <Authors>justim.odendaal</Authors>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <AssemblyName>$(MSBuildProjectName).Match</AssemblyName>
+    <Version>$(AssemblyVersion)</Version>
   </PropertyGroup>
 
   <ItemGroup>
