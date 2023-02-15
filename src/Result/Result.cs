@@ -39,6 +39,11 @@ namespace Result
             ValidationErrors = new ReadOnlyDictionary<string, string[]>(validationErrors);
         }
 
+        private Result(ReadOnlyDictionary<string, string[]> validationErrors)
+        {
+            ValidationErrors = new ReadOnlyDictionary<string, string[]>(validationErrors);
+        }
+
         public static Result<TResult> Failure(Exception ex)
         {
             return new Result<TResult>(ex);
@@ -70,6 +75,31 @@ namespace Result
             return new Result<TResult>(validationErrors);
         }
 
+        public static Result<TResult> Validation(ReadOnlyDictionary<string, string[]> validationErrors)
+        {
+            return new Result<TResult>(validationErrors);
+        }
+
+        public static Result<TResult> From<TFrom>(Result<TFrom> from)
+        {
+            switch (from.ErrorType)
+            {
+                case FailureType.Error:
+                    switch (from.Error!.Type)
+                    {
+                        case Result.ErrorType.Error:
+                            return Result<TResult>.Failure(from.Error!);
+                        case Result.ErrorType.Exception:
+                            return Result<TResult>.Failure(from.Error.Exception!);
+                    }
+                    break;
+                case FailureType.Validation:
+                    return Result<TResult>.Validation(from.ValidationErrors!);
+            }
+
+            throw new Exception("Only error and validation results area ble to be converted");
+        }
+
         public static Result<TResult> Validation(string field, string[] fieldValidationErrors)
         {
             var validationError = new Dictionary<string, string[]>
@@ -92,7 +122,6 @@ namespace Result
         {
             return this.IsSuccess ? success(this.Value) : (Error != null ? error(this.Error) : validation(this.ValidationErrors));
         }
-
 
         public ReadOnlyDictionary<string, string[]>? ValidationErrors { get; init; } 
 
